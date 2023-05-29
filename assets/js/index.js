@@ -35,6 +35,15 @@ class Player {
 	update() {
 		this.draw();
 		this.position.y += this.velocity.y;
+		this.position.x += this.velocity.x; 
+		
+		this.checkBounds()
+	}
+	
+	checkBounds(){
+		// Define the padding
+		const padding = 5;
+
 		// If the player is not at the bottom of the canvas, apply gravity
 		if (this.position.y + this.height + this.velocity.y <= canvas.height) {
 			this.velocity.y += gravity;
@@ -43,7 +52,35 @@ class Player {
 		else {
 			this.velocity.y = 0;
 		}
+		// If the player is not at the left or right edge of the canvas, apply horizontal velocity
+		if (this.position.x + this.width + this.velocity.x <= canvas.width - padding && this.position.x + this.velocity.x >= padding) {
+			this.velocity.x += 0;
+		}
+		// If the player is at the left or right edge of the canvas, set the horizontal velocity to 0
+		else {
+			this.velocity.x = 0;
+		}
 	}
+
+	moveRight() {
+		const padding = 5;
+		this.velocity.x = 5;
+		this.checkBounds();
+		if (this.position.x + this.width > canvas.width - padding) {
+			this.velocity.x = 0;
+		}
+	}
+
+	moveLeft() {
+		const padding = 5;
+		this.velocity.x = -5;
+		this.checkBounds();
+		if (this.position.x < padding) {
+			this.velocity.x = 0;
+		}
+	}
+
+
 }
 
 // Create a new player
@@ -70,5 +107,11 @@ window.addEventListener('keydown', (event) => {
 	// If the player presses the space bar, jump
 	if (event.code === 'Space') {
 		player.velocity.y = -10;
+	}
+	else if (event.code === 'KeyA') {
+		player.moveLeft();
+	}
+	else if (event.code === 'KeyD') {
+		player.moveRight();
 	}
 });
